@@ -1,3 +1,11 @@
+"""
+Emotion Detection Server Module.
+
+This Flask web application provides endpoints for emotion detection analysis.
+It uses the EmotionDetection module to analyze text input and return 
+emotion scores along with the dominant emotion.
+"""
+
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -5,13 +13,29 @@ app = Flask("Emotion Detector")
 
 @app.route("/")
 def render_index_page():
+    """
+    Render the main index page.
+    
+    Returns:
+        str: Rendered HTML template for the index page
+    """
     return render_template('index.html')
 
 @app.route("/emotionDetector")
 def sent_analyzer():
+    """
+    Analyze text for emotion detection and return formatted results.
+    
+    Processes the 'textToAnalyze' query parameter through emotion detection
+    and returns a formatted string with emotion scores and dominant emotion.
+    
+    Returns:
+        str: Formatted string containing emotion analysis results
+        tuple: Error message and status code (400) for invalid input
+    """
     text_to_analyze = request.args.get('textToAnalyze')
-    if not text_to_analyze:
-        return "Ivalid Text! Please try again!", 400
+    if not text_to_analyze or text_to_analyze.strip() == "":
+        return "Invalid Text! Please try again!", 400
 
     response = emotion_detector(text_to_analyze)
 
@@ -35,3 +59,4 @@ def sent_analyzer():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    
